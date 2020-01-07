@@ -4,7 +4,7 @@ from PIL import Image
 import glob
 import math
 
-# 
+# Função de conversão e redimensão das imagens
 def resizeImageAndConvert ():
     #cropSize = 255, 255
     #image = Image.open('bruno_normal.JPG')
@@ -15,24 +15,34 @@ def resizeImageAndConvert ():
     #new_img = img.resize((255,255))
     #new_img.save("test.gif", "GIF", optimize=True)
     
-    im = Image.open('nascimento_oculos_smile.JPG')
-    width, height = im.size  
-    new_width = 2500
-    new_height = 2500
-    
-    # Setting the points for cropped image  
-    left = (width - new_width)/2
-    top = (height - new_height)/2
-    right = (width + new_width)/2
-    bottom = (height + new_height)/2
-
-    # Cropped image of above dimension  
-    # (It will not change orginal image)  
-    new_img = im.crop((left, top, right, bottom)) 
+    # Definir variáveis
+    new_width = 2300
+    new_height = 2300
     newsize = (255, 255) 
-    new_img = new_img.resize(newsize) 
-    # Shows the image in image viewer  
-    new_img.save("test1.gif", "GIF", optimize=True, quality=10)
+    
+    # Leitura das imagens
+    imgs = glob.glob("Original_Images/*.JPG")
+    
+    # Percorrer Lista de Imagens
+    for img in imgs:
+        im = Image.open(img)
+        width, height = im.size
+        
+        # Definir os pontos para recortar a imagem
+        left = (width - new_width)/2
+        top = (height - new_height)/2
+        right = (width + new_width)/2
+        bottom = (height + new_height)/2
+        
+        # Recortar a imagem com as definições acima definidas
+        new_img = im.crop((left, top, right, bottom)) 
+        
+        # Definir a dimensão da nova imagem
+        new_img = new_img.resize(newsize)
+        
+        name_img = img.split("/")[1].split(".")[0]
+        path = "DatasetMML/"+name_img+".gif"
+        new_img.save(path, "GIF", optimize=True, quality=10)
 
 # Funcao de processamento do dataset
 def readImages ():
@@ -88,6 +98,8 @@ def coefProj(phi, eigenvectors, size):
 # Verificar se identifica ou nao o input
 def testar (input_img , mean, eigenvectors , eigenvalues , size , coef_proj , distance = "mahalanobis"):
     
+    dist = []
+    
     # Centrar o input
     gamma = np.array(input_img.getdata())
     test_phi = gamma - mean
@@ -98,7 +110,6 @@ def testar (input_img , mean, eigenvectors , eigenvalues , size , coef_proj , di
     if distance == "euclidian":
         #dist = [np.linalg.norm( coef_proj[i] - test_coef_proj ) for i in range (size)]
         dist = [euclidian(coef_proj[i], test_coef_proj) for i in range (size)]
-        
         d_min = round(np.min(dist),2)
         d_max = round(np.max(dist),2)
         limit = 7600
@@ -108,15 +119,15 @@ def testar (input_img , mean, eigenvectors , eigenvalues , size , coef_proj , di
         d_max = round(np.max(dist),4)
         limit = 0.8
     else: 
-        print("Distancia invalida .")
+        print("Distancia invalida.")
         return (-1)
-    
+
     if d_min < limit:
         print('Imagem nr.: '+str(np.argmin(dist))+'\n'+'Distancia minima: '+ str(d_min)+ '\nDistancia máxima: '+ str(d_max)+'\n')
         return dist, test_coef_proj
     else: 
         print('Falhou no reconhecimento.')
-        return (-1)
+        return [],[]
 
 
 # Distancia euclidiana
