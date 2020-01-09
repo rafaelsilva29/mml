@@ -6,18 +6,9 @@ import math
 
 # Função de conversão e redimensão das imagens
 def resizeImageAndConvert ():
-    #cropSize = 255, 255
-    #image = Image.open('bruno_normal.JPG')
-    #image.thumbnail(cropSize, Image.ANTIALIAS)
-    #image.save('test.gif', 'GIF', quality=88)
-    
-    #img = Image.open('bruno_normal.JPG')
-    #new_img = img.resize((255,255))
-    #new_img.save("test.gif", "GIF", optimize=True)
-    
-    # Definir variáveis
-    new_width = 2300
-    new_height = 2300
+    cropSize = 255, 255
+    new_width = 2770
+    new_height = 2770
     newsize = (255, 255) 
     
     # Leitura das imagens
@@ -26,7 +17,8 @@ def resizeImageAndConvert ():
     # Percorrer Lista de Imagens
     for img in imgs:
         im = Image.open(img)
-        width, height = im.size
+
+        width, height = im.size # Get dimensions
         
         # Definir os pontos para recortar a imagem
         left = (width - new_width)/2
@@ -44,6 +36,7 @@ def resizeImageAndConvert ():
         path = "DatasetMML/"+name_img+".gif"
         new_img.save(path, "GIF", optimize=True, quality=10)
 
+        
 # Funcao de processamento do dataset
 def readImages ():
     # Leitura das imagens
@@ -59,7 +52,7 @@ def readImages ():
 
 
 # Implementacao do PCA
-def pca(X, confidence=0.8):
+def pca(X, num_comp=0, confidence=0.8):
     # Media do dataset
     mean = np.mean(X,0)
     
@@ -80,10 +73,12 @@ def pca(X, confidence=0.8):
     traco = np.sum(eigenvalues)
     while(np.sum(eigenvalues[:k])/traco < confidence):
         k = k+1
-    print(k)
+    
+    print("Número de vectores pp a usar: " + str(k))
+    print("Número de vectores fixos a utilizar: " + str(num_comp))
     
     # Escolher os vetores pp associados
-    eigenvectors = eigenvectors[:,0:k]
+    eigenvectors = eigenvectors[:,0:num_comp]
     return eigenvalues, eigenvectors, phi, mean, variance
 
 
@@ -112,12 +107,12 @@ def testar (input_img , mean, eigenvectors , eigenvalues , size , coef_proj , di
         dist = [euclidian(coef_proj[i], test_coef_proj) for i in range (size)]
         d_min = round(np.min(dist),2)
         d_max = round(np.max(dist),2)
-        limit = 7600
+        limit = 1900
     elif distance == "mahalanobis" :
         dist = mahalanobis(coef_proj , test_coef_proj , eigenvalues , eigenvectors.shape [1])
         d_min = round(np.min(dist),4)
         d_max = round(np.max(dist),4)
-        limit = 0.8
+        limit = 0.035
     else: 
         print("Distancia invalida.")
         return (-1)
