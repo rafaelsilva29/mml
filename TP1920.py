@@ -33,7 +33,7 @@ def resizeImageAndConvert ():
         new_img = new_img.resize(newsize)
         
         name_img = img.split("/")[1].split(".")[0]
-        path = "DatasetMML/"+name_img+".gif"
+        path = "test/"+name_img+".gif"
         new_img.save(path, "GIF", optimize=True, quality=10)
 
         
