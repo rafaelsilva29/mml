@@ -4,6 +4,7 @@ from PIL import Image
 import glob
 import math
 
+
 # Função de conversão e redimensão das imagens
 def resizeImageAndConvert ():
     cropSize = 255, 255
@@ -52,7 +53,7 @@ def readImages ():
 
 
 # Implementacao do PCA
-def pca(X, num_comp=0, confidence=0.8):
+def pca(X, confidence=0.8):
     # Media do dataset
     mean = np.mean(X,0)
     
@@ -75,11 +76,11 @@ def pca(X, num_comp=0, confidence=0.8):
         k = k+1
     
     print("Número de vectores pp a usar: " + str(k))
-    print("Número de vectores fixos a utilizar: " + str(num_comp))
+    #print("Número de vectores fixos a utilizar: " + str(num_comp))
     
     # Escolher os vetores pp associados
-    eigenvectors = eigenvectors[:,0:num_comp]
-    return eigenvalues, eigenvectors, phi, mean, variance
+    eigenvectors = eigenvectors[:,0:k]
+    return k, eigenvalues, eigenvectors, phi, mean, variance
 
 
 # Calculo dos coeficientes da projeccao
@@ -107,12 +108,12 @@ def testar (input_img , mean, eigenvectors , eigenvalues , size , coef_proj , di
         dist = [euclidian(coef_proj[i], test_coef_proj) for i in range (size)]
         d_min = round(np.min(dist),2)
         d_max = round(np.max(dist),2)
-        limit = 1900
+        limit = 3200
     elif distance == "mahalanobis" :
         dist = mahalanobis(coef_proj , test_coef_proj , eigenvalues , eigenvectors.shape [1])
         d_min = round(np.min(dist),4)
         d_max = round(np.max(dist),4)
-        limit = 0.035
+        limit = 0.045
     else: 
         print("Distancia invalida.")
         return (-1)
