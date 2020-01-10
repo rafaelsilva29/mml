@@ -53,7 +53,7 @@ def readImages ():
 
 
 # Implementacao do PCA
-def pca(X, confidence=0.8):
+def pca(X, num_comp=7, confidence=0.8):
     # Media do dataset
     mean = np.mean(X,0)
     
@@ -76,10 +76,10 @@ def pca(X, confidence=0.8):
         k = k+1
     
     print("Número de vectores pp a usar: " + str(k))
-    #print("Número de vectores fixos a utilizar: " + str(num_comp))
+    print("Número de vectores fixos a utilizar: " + str(num_comp))
     
     # Escolher os vetores pp associados
-    eigenvectors = eigenvectors[:,0:k]
+    eigenvectors = eigenvectors[:,0:num_comp]
     return k, eigenvalues, eigenvectors, phi, mean, variance
 
 
@@ -92,7 +92,7 @@ def coefProj(phi, eigenvectors, size):
 
 
 # Verificar se identifica ou nao o input
-def testar (input_img , mean, eigenvectors , eigenvalues , size , coef_proj , distance = "mahalanobis"):
+def testar(input_img , mean, eigenvectors , eigenvalues , size , coef_proj , distance = "mahalanobis"):
     
     dist = []
     
