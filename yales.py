@@ -3,45 +3,11 @@ import matplotlib.pyplot as plt
 from PIL import Image
 import glob
 import math
-
-
-# Função de conversão e redimensão das imagens
-def resizeImageAndConvert ():
-    cropSize = 255, 255
-    new_width = 100
-    new_height = 100
-    newsize = (255, 255) 
-    
-    # Leitura das imagens
-    imgs = glob.glob("Original_Images/*.JPG")
-    
-    # Percorrer Lista de Imagens
-    for img in imgs:
-        im = Image.open(img)
-
-        width, height = im.size # Get dimensions
-        
-        # Definir os pontos para recortar a imagem
-        left = (width - new_width)/2
-        top = (height - new_height)/2
-        right = (width + new_width)/2
-        bottom = (height + new_height)/2
-        
-        # Recortar a imagem com as definições acima definidas
-        new_img = im.crop((left, top, right, bottom)) 
-        
-        # Definir a dimensão da nova imagem
-        new_img = new_img.resize(newsize)
-        
-        name_img = img.split("/")[1].split(".")[0]
-        path = "test/"+name_img+".gif"
-        new_img.save(path, "GIF", optimize=True, quality=10)
-
         
 # Funcao de processamento do dataset
 def readImages ():
     # Leitura das imagens
-    imgs = glob.glob("DatasetMML/*.gif")
+    imgs = glob.glob("YaleFaces/*.gif")
     data = [Image.open(i).convert('L') for i in imgs]
     
     # Tamanho do dataset
@@ -53,7 +19,7 @@ def readImages ():
 
 
 # Implementacao do PCA
-def pca(X, num_comp=7, confidence=0.8):
+def pca(X, confidence=0.8):
     # Media do dataset
     mean = np.mean(X,0)
     
@@ -76,10 +42,9 @@ def pca(X, num_comp=7, confidence=0.8):
         k = k+1
     
     print("Número de vectores pp a usar: " + str(k))
-    print("Número de vectores fixos a utilizar: " + str(num_comp))
     
     # Escolher os vetores pp associados
-    eigenvectors = eigenvectors[:,0:num_comp]
+    eigenvectors = eigenvectors[:,0:k]
     return k, eigenvalues, eigenvectors, phi, mean, variance
 
 
@@ -108,18 +73,20 @@ def testar(input_img , mean, eigenvectors , eigenvalues , size , coef_proj , dis
         dist = [euclidian(coef_proj[i], test_coef_proj) for i in range (size)]
         d_min = round(np.min(dist),2)
         d_max = round(np.max(dist),2)
-        limit = 3200
+        limit = 14500
     elif distance == "mahalanobis" :
         dist = mahalanobis(coef_proj , test_coef_proj , eigenvalues , eigenvectors.shape [1])
         d_min = round(np.min(dist),4)
         d_max = round(np.max(dist),4)
-        limit = 0.045
+        limit = 0.09
     else: 
         print("Distancia invalida.")
         return (-1)
+    
+    #print('Distancia minima: '+ str(d_min))
 
     if d_min < limit:
-        print('Imagem nr.: '+str(np.argmin(dist))+'\n'+'Distancia minima: '+ str(d_min)+ '\nDistancia máxima: '+ str(d_max)+'\n')
+        print('Imagem nr.: '+str(np.argmin(dist)))
         return dist, test_coef_proj
     else: 
         print('Falhou no reconhecimento.')
@@ -143,5 +110,3 @@ def mahalanobis(x, y, eigenvalues, k):
     for i in range(N):
         distance.append(np.sum(np.divide((x[i]-y)**2, eigenvalues[:k]))) 
     return distance
-
-
