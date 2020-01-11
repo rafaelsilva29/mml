@@ -83,7 +83,7 @@ def testar(input_img , mean, eigenvectors , eigenvalues , size , coef_proj , dis
         print("Distancia invalida.")
         return (-1)
     
-    #print('Distancia minima: '+ str(d_min))
+    print('Distancia minima: '+ str(d_min))
 
     if d_min < limit:
         print('Imagem nr.: '+str(np.argmin(dist)))

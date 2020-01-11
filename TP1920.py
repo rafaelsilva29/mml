@@ -7,13 +7,12 @@ import math
 
 # Função de conversão e redimensão das imagens
 def resizeImageAndConvert ():
-    cropSize = 255, 255
-    new_width = 100
-    new_height = 100
+    new_width = 2770
+    new_height = 2770
     newsize = (255, 255) 
     
     # Leitura das imagens
-    imgs = glob.glob("Original_Images/*.JPG")
+    imgs = glob.glob("OriginalImages/*.JPG")
     
     # Percorrer Lista de Imagens
     for img in imgs:
@@ -34,7 +33,7 @@ def resizeImageAndConvert ():
         new_img = new_img.resize(newsize)
         
         name_img = img.split("/")[1].split(".")[0]
-        path = "test/"+name_img+".gif"
+        path = "DatasetMML/"+name_img+".gif"
         new_img.save(path, "GIF", optimize=True, quality=10)
 
         
@@ -143,5 +142,3 @@ def mahalanobis(x, y, eigenvalues, k):
     for i in range(N):
         distance.append(np.sum(np.divide((x[i]-y)**2, eigenvalues[:k]))) 
     return distance
-
-
