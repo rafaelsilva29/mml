@@ -1,4 +1,4 @@
-# MML-1920
+# MML
 
 ## Métricas de Machine Learning - MIEINF
 
@@ -7,4 +7,3 @@ Trabalho Prático da Unidade Curricular Métricas de Machine Learning pertencent
 #### Mestrado Integrado em Engenharia Informática 
 
 ### Universidade do Minho
-
