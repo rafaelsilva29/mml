@@ -2,7 +2,7 @@
 
 ## Métricas de Machine Learning - MIEINF
 
-Trabalho Prático da Unidade Curricular Métricas de Machine Learning pertencente ao perfil de Machine Learning
+Practical Work of the Machine Learning Metrics course belonging to the Machine Learning profile
 
 #### Mestrado Integrado em Engenharia Informática 
 
